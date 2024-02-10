@@ -42,41 +42,30 @@ def createDatabase():
     connection.close()
 
 # dodawanie elementów do tabel w dynamiczny sposób
-def insertMovie(title, director, genre, year):
-    connection = sqlite3.connect('media.db')
-    cursor = connection.cursor()
+def insertMedia(tableName, title, creator, genre, year):
+    conn = sqlite3.connect('media.db')
+    cursor = conn.cursor()
 
-    cursor.execute('''
-        INSERT INTO movies (title, director, genre, year)
-        VALUES (?, ?, ?, ?)
-    ''', (title, director, genre, year))
+    try:
+        if tableName == 'movies':
+            cursor.execute("INSERT INTO movies (title, director, genre, year) VALUES (?, ?, ?, ?)",
+                           (title, creator, genre, year))
+        elif tableName == 'books':
+            cursor.execute("INSERT INTO books (title, author, genre, year) VALUES (?, ?, ?, ?)",
+                           (title, creator, genre, year))
+        elif tableName == 'records':
+            cursor.execute("INSERT INTO records (title, artist, genre, year) VALUES (?, ?, ?, ?)",
+                           (title, creator, genre, year))
+        else:
+            print("Wrong table name! You can choose: movies, books or records!")
 
-    connection.commit()
-    connection.close()
+        conn.commit()
+        print("Element added!", tableName)
+    except sqlite3.Error as e:
+        print("Error during adding the element!", e)
+    finally:
+        conn.close()
 
-def insertBook(title, author, genre, year):
-    connection = sqlite3.connect('media.db')
-    cursor = connection.cursor()
-
-    cursor.execute('''
-        INSERT INTO books (title, author, genre, year)
-        VALUES (?, ?, ?, ?)
-    ''', (title, author, genre, year))
-
-    connection.commit()
-    connection.close()
-
-def insertRecord(title, artist, genre, year):
-    connection = sqlite3.connect('media.db')
-    cursor = connection.cursor()
-
-    cursor.execute('''
-        INSERT INTO  records (title, artist, genre, year)
-        VALUES (?, ?, ?, ?)
-    ''', (title, artist, genre, year))
-
-    connection.commit()
-    connection.close()
 
 #usuwanie elementów z określonej bazy danych
 def deleteMedia(tableName, mediaId):
@@ -112,24 +101,19 @@ def listMedia(tableName):
     connection.close()
     return result
 
-# zapisanie danych do pliku tekstowego
-def saveTxt(data, fileName):
-    with open(fileName, 'w') as file:
-        for record in data:
-            file.write(str(record) + '\n')
-
 # zapisanie danych do pliku w formacie JSON
 def saveJson(data, fileName):
     with open(fileName, 'w') as file:
         json.dump(data, file, indent=4)
 
-# zapisanie danych do pliku w formacie CSV
-def saveCsv(data, fileName, headers=None):
-    with open(fileName, 'a', newline='') as file:
-        csvWriter = csv.writer(file)
+# menu z listą opcji
+def menu():
+    print("\nChoose the option: ")
+    print("1. Add the new element")
+    print("2. Delete the element")
+    print("3. Search the element.")
+    print("4. List all elements")
+    print("5. Save the database")
+    print("0. Exit")
+    return input("\nEnter your choice: ")
 
-        if os.stat(fileName).st_size == 0 and headers:
-            csvWriter.writerow(headers)
-
-        for record in data:
-            csvWriter.writerow(record)
