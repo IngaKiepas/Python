@@ -10,4 +10,3 @@ class Iterator:
         result = self.current
         self.current = 1 - self.current
         return result
-

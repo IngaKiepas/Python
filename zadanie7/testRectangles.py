@@ -1,8 +1,9 @@
 import unittest
-
 from points import Point
-
 import rectangles
+from iterator1 import Iterator
+from iterator2 import RandomIterator
+from iterator3 import NumberIterator
 
 class TestRectangle(unittest.TestCase):
 
@@ -70,6 +71,24 @@ class TestRectangle(unittest.TestCase):
         d = rectangles.Rectangle(1, 0, 2, 1)
         e = rectangles.Rectangle(0, 0, 1, 1)
         self.assertEqual(a.make4(), (b, c, d, e))
+
+    def test_iterator1(self):
+        iterator = Iterator()
+        for _ in range(10):
+            print(next(iterator), end=" ")
+        print()
+
+    def test_iterator2(self):
+        iterator = RandomIterator()
+        for _ in range(10):
+            print(next(iterator), end=" ")
+        print()
+
+    def test_iterator3(self):
+        iterator = NumberIterator()
+        for _ in range(15):
+            print(next(iterator), end=" ")
+        print()
 
     if __name__ == '__main__':
         unittest.main()

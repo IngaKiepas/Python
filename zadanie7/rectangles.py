@@ -44,8 +44,8 @@ class Rectangle:
     def intersection(self, other): #część wspólna prostokątów
         x1 = max(self.pt1.x, other.pt1.x)
         y1 = max(self.pt1.y, other.pt1.y)
-        x2 = max(self.pt2.x, other.pt2.x)
-        y2 = max(self.pt2.y, other.pt2.y)
+        x2 = min(self.pt2.x, other.pt2.x)
+        y2 = min(self.pt2.y, other.pt2.y)
 
         if x1 < x2 and y1 < y2:
             return Rectangle(x1, y1, x2, y2)
@@ -55,8 +55,8 @@ class Rectangle:
     def cover(self, other): #prostokąt nakrywający oba
         x1 = min(self.pt1.x, other.pt1.x)
         y1 = min(self.pt1.y, other.pt1.y)
-        x2 = min(self.pt2.x, other.pt2.x)
-        y2 = min(self.pt2.y, other.pt2.y)
+        x2 = max(self.pt2.x, other.pt2.x)
+        y2 = max(self.pt2.y, other.pt2.y)
 
         return Rectangle(x1, y1, x2, y2)
 
